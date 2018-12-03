@@ -24,6 +24,13 @@ NAN_METHOD(evdev_new_from_fd) {
     Nan::ThrowError(strerror(errno));
     //Nan::ThrowError(info[0]);
   }
+
+  int grab;
+  grab = ioctl(To<int>(info[0]).FromJust(), EVIOCGRAB, 1);
+  if (grab == -1){
+    Nan::ThrowError(strerror(errno));
+  }
+
   v8::Local<v8::Object> size = Nan::New<v8::Object>();
   Nan::Set(size,Nan::New("bustype").ToLocalChecked(), Nan::New<v8::Number>((double)id.bustype));
   Nan::Set(size,Nan::New("vendor").ToLocalChecked(), Nan::New<v8::Number>((double)id.vendor));
